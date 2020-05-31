@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 region.configure('dogpile.cache.dbm', arguments={'filename': 'cachefile.dbm'})
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 DIRECTORIES = os.getenv("WATCHDOG_DIRECTORIES").split(",")
 PROVIDERS = [
@@ -50,9 +50,9 @@ class Watcher:
         try:
             while True:
                 time.sleep(1)
-        except:
+        except Exception as e:
             self.observer.stop()
-            logging.error(f"Error: {sys.exc_info()[0]}")
+            logging.error(f"Error: {repr(e)}")
 
         self.observer.join()
 
@@ -68,14 +68,18 @@ class SubliminalClient(FileSystemEventHandler):
         if not mimetypes.guess_type(path)[0].startswith('video'):
             return
 
-        logging.debug(f"Pulling subtitles for: {path}")
-        video = scan_video(path)
-        subtitles = provider_pool.list_subtitles(video=video, languages={Language('eng'), Language('nld')})
-        best_subtitles = provider_pool.download_best_subtitles(subtitles=subtitles, video=video, languages={Language('eng'), Language('nld')})
-        save_subtitles(video, best_subtitles)
+        try:
+            logging.info(f"Pulling subtitles for: {path}")
+            video = scan_video(path)
+            subtitles = provider_pool.list_subtitles(video=video, languages={Language('eng'), Language('nld')})
+            best_subtitles = provider_pool.download_best_subtitles(subtitles=subtitles, video=video, languages={Language('eng'), Language('nld')})
+            save_subtitles(video, best_subtitles)
+            logging.info(f"Subtitles saved for: {path}")
+        except Exception as e:
+            logging.error(f"Error: {repr(e)}")
 
 
 if __name__ == '__main__':
-    logging.debug("Start up")
+    logging.info("Start up")
     watcher = Watcher()
     watcher.start()
