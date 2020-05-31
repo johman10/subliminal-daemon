@@ -1,0 +1,14 @@
+[Unit]
+Description=Subliminal-daemon - Automatically download subtitles when new files are found
+After=network.target
+
+[Service]
+Type=simple
+User=subliminal-daemon
+WorkingDirectory=/path/to/subliminal-daemon
+EnvironmentFile=/path/to/subliminal-daemon/.env
+ExecStart=/path/to/python /path/to/subliminal-daemon/app.py
+
+[Install]
+Alias=subliminaldaemon.service
+WantedBy=multi-user.target
