@@ -5,9 +5,13 @@ After=network.target
 [Service]
 Type=simple
 User=subliminal-daemon
+Group=subliminal-daemon
 WorkingDirectory=/path/to/subliminal-daemon
 EnvironmentFile=/path/to/subliminal-daemon/.env
 ExecStart=/path/to/python /path/to/subliminal-daemon/app.py
+
+Restart=on-failure
+RestartSec=5s
 
 [Install]
 Alias=subliminaldaemon.service

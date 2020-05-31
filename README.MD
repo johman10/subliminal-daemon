@@ -17,6 +17,6 @@ I wanted to run Subliminal in a monitoring kind of state so I build this little 
 For Linux there is a startup script available in the repo for systemd.
 1. Copy the existing file: `cp subliminal-daemon.example.service subliminal-daemon.service`
 2. Edit the file to your liking (user, paths etc)
-3. Symlink the startup file to systemd: `ln -s /path/to/subliminal-daemon/subliminal-daemon.service /etc/systemd/system/multi-user.target.wants/subliminal-daemon.service`
+3. Symlink the startup file to systemd: `ln -s /path/to/subliminal-daemon/subliminal-daemon.service /etc/systemd/system/subliminal-daemon.service`
 4. Enable it with: `systemctl enable subliminal-daemon`
 5. Start it now with: `systemctl start subliminal-daemon`
