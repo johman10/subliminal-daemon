@@ -34,7 +34,6 @@ PROVIDER_CONFIGURATIONS = {
     },
 }
 ENABLED_PROVIDERS = list(filter(lambda p: os.getenv(f"{p.upper()}_ENABLED", "true") == "true", PROVIDERS))
-provider_pool = ProviderPool(providers=ENABLED_PROVIDERS, provider_configs=PROVIDER_CONFIGURATIONS)
 
 class Watcher:
     def __init__(self):
@@ -71,6 +70,7 @@ class SubliminalClient(FileSystemEventHandler):
         try:
             logging.info(f"Pulling subtitles for: {path}")
             video = scan_video(path)
+            provider_pool = ProviderPool(providers=ENABLED_PROVIDERS, provider_configs=PROVIDER_CONFIGURATIONS)
             subtitles = provider_pool.list_subtitles(video=video, languages={Language('eng'), Language('nld')})
             best_subtitles = provider_pool.download_best_subtitles(subtitles=subtitles, video=video, languages={Language('eng'), Language('nld')})
             save_subtitles(video, best_subtitles)
